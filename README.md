@@ -1,406 +1,398 @@
-# Solar Panel Fault Detection System
+# ☀️ Solar Panel Fault Detection System
 
-A comprehensive machine learning system for detecting faults in solar panels using tabular sensor data and Random Forest classification. The system includes a Python ML backend, Spring Boot API server, and React frontend dashboard with secure authentication.
+An AI-powered, full-stack application for real-time solar panel fault detection and monitoring using Machine Learning, Spring Boot, and React.
 
-## System Architecture
+![System Status](https://img.shields.io/badge/status-active-success.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
-- **Python ML Backend**: Random Forest classifier with Flask API
-- **Spring Boot Backend**: Secure REST API with JWT authentication and role-based access
-- **React Frontend**: Interactive dashboard for analysis and monitoring
-- **MySQL Database**: Stores user data, predictions, and analytics
+## 🌟 Features
 
-## Features
+### 🤖 Machine Learning
+- **Random Forest Classifier** for fault detection
+- **Real-time predictions** with confidence scores
+- **Multiple fault types** detection:
+  - Panel Degradation
+  - Dust Accumulation
+  - Partial Shading
+  - Inverter Fault
+  - Normal Operation
 
-### Machine Learning
-- **Synthetic Dataset Generation**: Creates realistic solar panel sensor data with various fault types
-- **Data Preprocessing**: Comprehensive data cleaning, scaling, and encoding pipeline
-- **Random Forest Classification**: Robust machine learning model for fault detection
-- **Model Evaluation**: Detailed performance metrics and visualizations
-- **Prediction Interface**: Easy-to-use prediction functions for real-time fault detection
+### 🏭 Plant & Panel Management
+- **CRUD operations** for solar plants and panels
+- **Status tracking** (Active, Maintenance, Offline)
+- **Technician assignment** for maintenance
+- **Real-time monitoring** of panel performance
 
-### Security & Authentication
-- **JWT Authentication**: Secure token-based authentication
-- **Role-Based Access Control**: ADMIN and OPERATOR roles with different permissions
-- **Password Security**: Strong password requirements with real-time strength validation
-- **Secure Registration**: Public registration restricted to OPERATOR role only
-- **Admin User Management**: ADMINs can create other ADMIN users through secure endpoint
+### 🚨 Alert Management System
+- **Automatic alert generation** from sensor data
+- **Maintenance workflow** (Open → In Progress → Resolved)
+- **Severity levels** (Critical, High, Medium, Low)
+- **Technician notes** and assignment
+- **Filter and sort** capabilities
 
-### Web Interface
-- **Interactive Dashboard**: Real-time fault detection and monitoring
-- **Analytics**: Comprehensive charts and statistics
-- **History Tracking**: View past predictions and trends
-- **Responsive Design**: Works on desktop and mobile devices
+### 📊 Live Dashboard
+- **Real-time statistics** with auto-refresh
+- **Plant and panel metrics**
+- **Alert distribution** visualization
+- **System health monitoring**
 
-## Fault Types Detected
+### 🔐 Authentication & Authorization
+- **JWT-based authentication**
+- **Role-based access control** (Admin, Technician, Viewer)
+- **Secure password handling**
+- **User management**
 
-1. **NORMAL** - Panel operating normally
-2. **PARTIAL_SHADING** - Reduced power due to shading
-3. **PANEL_DEGRADATION** - Overall performance degradation
-4. **INVERTER_FAULT** - Inverter malfunction causing voltage issues
-5. **DUST_ACCUMULATION** - Efficiency reduction due to dust buildup
+### 📡 IoT Integration
+- **Sensor data processing** pipeline
+- **Automatic ML prediction** on data receipt
+- **Alert generation** for detected faults
+- **Sensor simulator** for testing
 
-## Sensor Features
-
-- **Voltage** (V) - Panel output voltage
-- **Current** (A) - Panel output current  
-- **Temperature** (°C) - Panel surface temperature
-- **Irradiance** (W/m²) - Solar irradiance level
-- **Power** (W) - Panel power output
-
-## Project Structure
+## 🏗️ Architecture
 
 ```
-solar-panel-fault-detection/
-├── src/                      # Python ML Core
-│   ├── __init__.py
-│   ├── data_generator.py      # Synthetic dataset generation
-│   ├── preprocessor.py        # Data preprocessing pipeline
-│   ├── model.py              # Random Forest model implementation
-│   └── predictor.py          # Prediction interface
-├── api/                      # Python Flask API
-│   ├── __init__.py
-│   ├── app.py                # Flask REST API
-│   └── test_api.py           # API test suite
-├── spring-backend/           # Spring Boot Backend
-│   ├── src/main/java/        # Java source code
-│   ├── src/test/java/        # Java tests
-│   ├── pom.xml              # Maven dependencies
-│   └── README.md            # Backend documentation
-├── react-frontend/           # React Frontend
-│   ├── src/                 # React source code
-│   ├── public/              # Static assets
-│   ├── package.json         # Node dependencies
-│   └── README.md            # Frontend documentation
-├── data/                     # Generated datasets
-├── models/                   # Trained models and preprocessors
-├── plots/                    # Generated visualizations
-├── main.py                   # Main ML training script
-├── run_api.py               # API launcher script
-├── example_usage.py         # Usage examples
-├── requirements.txt         # Python dependencies
-├── SECURITY_FIX_SUMMARY.md  # Security documentation
-└── README.md               # This file
+┌─────────────────┐
+│  React Frontend │ (Port 3000)
+│   (User Interface)│
+└────────┬────────┘
+         │ HTTP/REST
+         ▼
+┌─────────────────┐
+│ Spring Boot API │ (Port 8081)
+│  (Business Logic)│
+└────┬────────┬───┘
+     │        │
+     │        └──────────┐
+     │                   │ HTTP
+     ▼                   ▼
+┌─────────┐      ┌──────────────┐
+│   H2    │      │  ML API      │ (Port 5000)
+│Database │      │ (Python/Flask)│
+└─────────┘      └──────────────┘
 ```
 
-## Security Features
+## 🚀 Quick Start
 
-### Authentication & Authorization
-- **JWT Tokens**: Secure authentication with configurable expiration
-- **Role-Based Access**: 
-  - `ADMIN`: Full access to analytics, user management, and system administration
-  - `OPERATOR`: Access to analysis tools and prediction history
-- **Secure Registration**: Public registration restricted to OPERATOR role only
-- **Password Security**: Real-time password strength validation with security requirements
+### Prerequisites
 
-### API Security
-- **Protected Endpoints**: Role-based endpoint protection
-- **Input Validation**: Comprehensive request validation and sanitization
-- **Error Handling**: Secure error responses without information leakage
+- **Java 17+**
+- **Node.js 14+**
+- **Python 3.8+**
+- **Maven 3.6+**
+- **npm 6+**
 
-### Registration Security
-⚠️ **Important**: Public registration only allows OPERATOR role creation. To create ADMIN users:
-1. Use existing ADMIN account to access `/auth/admin/create-user` endpoint
-2. Contact system administrator for ADMIN access
-3. See `SECURITY_FIX_SUMMARY.md` for detailed security implementation
+### Installation
 
-## Installation
+1. **Clone the repository**
+```bash
+git clone https://github.com/yourusername/solar-panel-fault-detection.git
+cd solar-panel-fault-detection
+```
 
-1. Install required dependencies:
+2. **Install Python dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-## Usage
-
-### Quick Start
-
-Run the complete pipeline:
+3. **Install React dependencies**
 ```bash
-python main.py
+cd react-frontend
+npm install
+cd ..
 ```
 
-This will:
-1. Generate synthetic dataset (10,000 samples)
-2. Preprocess the data
-3. Train Random Forest model
-4. Evaluate model performance
-5. Test prediction functionality
-6. Save trained model and preprocessors
-
-### Making Predictions
-
-```python
-from src.predictor import predict_fault
-
-# Predict fault for sensor readings
-result = predict_fault(
-    voltage=32.5,
-    current=8.2, 
-    temperature=25.0,
-    irradiance=850.0,
-    power=266.5
-)
-
-print(f"Predicted fault: {result['predicted_fault_type']}")
-print(f"Confidence: {result['confidence']}")
-print(f"Description: {result['fault_description']}")
-print(f"Recommendation: {result['maintenance_recommendation']}")
-```
-
-### Using the Predictor Class
-
-```python
-from src.predictor import SolarFaultPredictor
-
-# Initialize predictor with trained model
-predictor = SolarFaultPredictor(
-    model_path='models/solar_fault_model.pkl',
-    preprocessor_path='models/preprocessors'
-)
-
-# Analyze a sample
-analysis = predictor.analyze_sample(
-    voltage=28.0, current=4.5, temperature=24.0, 
-    irradiance=600.0, power=126.0
-)
-
-print(analysis)
-```
-
-### Custom Dataset Generation
-
-```python
-from src.data_generator import SolarDataGenerator
-
-generator = SolarDataGenerator(random_state=42)
-df = generator.generate_dataset(n_samples=5000)
-df.to_csv('custom_dataset.csv', index=False)
-```
-
-### Custom Model Training
-
-```python
-from src.preprocessor import SolarDataPreprocessor
-from src.model import SolarFaultDetectionModel
-
-# Preprocess data
-preprocessor = SolarDataPreprocessor()
-X_train, X_test, y_train, y_test = preprocessor.preprocess_pipeline('data/solar_panel_data.csv')
-
-# Train model with custom parameters
-model = SolarFaultDetectionModel(
-    n_estimators=200,
-    max_depth=15,
-    random_state=42
-)
-model.train(X_train, y_train)
-
-# Evaluate
-class_names = preprocessor.label_encoder.classes_
-results = model.evaluate(X_test, y_test, class_names)
-```
-
-## Model Performance
-
-The Random Forest model typically achieves:
-- **Accuracy**: ~95-98% on test data
-- **Precision/Recall**: High performance across all fault types
-- **Feature Importance**: Power and voltage are typically most important features
-
-## Output Files
-
-After running `main.py`, the following files are generated:
-
-- `data/solar_panel_data.csv` - Synthetic dataset
-- `models/solar_fault_model.pkl` - Trained Random Forest model
-- `models/preprocessors_scaler.pkl` - Feature scaler
-- `models/preprocessors_label_encoder.pkl` - Label encoder
-- `plots/confusion_matrix.png` - Confusion matrix visualization
-- `plots/feature_importance.png` - Feature importance plot
-
-## API Reference
-
-### SolarFaultPredictor
-
-Main class for making predictions:
-
-- `predict_single()` - Predict fault for single sample
-- `predict_batch()` - Predict faults for multiple samples  
-- `analyze_sample()` - Complete analysis with recommendations
-- `get_fault_description()` - Get fault type description
-- `get_maintenance_recommendation()` - Get maintenance advice
-
-### SolarDataGenerator
-
-Generate synthetic datasets:
-
-- `generate_dataset()` - Create synthetic dataset
-- `generate_and_save_dataset()` - Generate and save to CSV
-
-### SolarDataPreprocessor
-
-Data preprocessing pipeline:
-
-- `preprocess_pipeline()` - Complete preprocessing
-- `preprocess_single_sample()` - Preprocess single sample
-- `save_preprocessors()` - Save fitted preprocessors
-- `load_preprocessors()` - Load saved preprocessors
-
-### SolarFaultDetectionModel
-
-Random Forest model wrapper:
-
-- `train()` - Train the model
-- `predict()` - Make predictions
-- `evaluate()` - Evaluate performance
-- `save_model()` - Save trained model
-- `load_model()` - Load saved model
-
-## REST API
-
-The project includes a Flask REST API for real-time fault detection.
-
-### Starting the API Server
-
+4. **Build Spring Boot backend**
 ```bash
-# Method 1: Using the convenience script
-python run_api.py
+cd spring-backend
+mvn clean install -DskipTests
+cd ..
+```
 
-# Method 2: Direct Flask app
+### Running the Application
+
+#### Option 1: Start All Services Manually
+
+**Terminal 1 - ML API:**
+```bash
 python api/app.py
 ```
 
-The API will be available at `http://localhost:5000`
-
-### API Endpoints
-
-#### Health Check
-```
-GET /
-```
-Returns API status and available endpoints.
-
-#### API Information
-```
-GET /info
-```
-Returns detailed API and model information.
-
-#### Fault Prediction
-```
-POST /predict
-Content-Type: application/json
-
-{
-    "voltage": 32.5,
-    "current": 8.2,
-    "temperature": 25.0,
-    "irradiance": 850.0,
-    "power": 266.5
-}
-```
-
-**Response:**
-```json
-{
-    "predicted_fault": "NORMAL",
-    "confidence": "High",
-    "confidence_score": 0.95,
-    "severity": "None",
-    "description": "Panel is operating normally with no detected faults.",
-    "maintenance_recommendation": "Continue regular monitoring. No immediate action required.",
-    "all_probabilities": {
-        "NORMAL": 0.95,
-        "PARTIAL_SHADING": 0.02,
-        "PANEL_DEGRADATION": 0.01,
-        "INVERTER_FAULT": 0.01,
-        "DUST_ACCUMULATION": 0.01
-    },
-    "input_values": {
-        "voltage": 32.5,
-        "current": 8.2,
-        "temperature": 25.0,
-        "irradiance": 850.0,
-        "power": 266.5
-    }
-}
-```
-
-### Testing the API
-
+**Terminal 2 - Spring Boot Backend:**
 ```bash
-# Run comprehensive API tests
+cd spring-backend
+mvn spring-boot:run
+```
+
+**Terminal 3 - React Frontend:**
+```bash
+cd react-frontend
+npm start
+```
+
+#### Option 2: Use the Sensor Simulator (Optional)
+```bash
+python sensor_simulator.py
+```
+
+### Access the Application
+
+- **Frontend:** http://localhost:3000
+- **Backend API:** http://localhost:8081/api/v1
+- **ML API:** http://localhost:5000
+
+### Default Login Credentials
+
+- **Admin:** `admin` / `Admin123!`
+- **Technician:** `technician` / `Tech123!`
+- **Viewer:** `viewer` / `Viewer123!`
+
+## 📁 Project Structure
+
+```
+solar-panel-fault-detection/
+├── api/                          # Python ML API
+│   ├── app.py                   # Flask application
+│   └── test_api.py              # API tests
+├── spring-backend/              # Spring Boot backend
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/            # Java source code
+│   │   │   └── resources/       # Configuration files
+│   │   └── test/                # Unit tests
+│   └── pom.xml                  # Maven configuration
+├── react-frontend/              # React frontend
+│   ├── public/                  # Static files
+│   ├── src/
+│   │   ├── components/          # Reusable components
+│   │   ├── contexts/            # React contexts
+│   │   ├── pages/               # Page components
+│   │   └── services/            # API services
+│   └── package.json             # npm configuration
+├── src/                         # Python ML modules
+│   ├── model.py                 # ML model training
+│   ├── predictor.py             # Prediction logic
+│   └── preprocessor.py          # Data preprocessing
+├── data/                        # Training data
+├── models/                      # Trained ML models
+├── plots/                       # Visualization outputs
+└── sensor_simulator.py          # IoT sensor simulator
+```
+
+## 🔧 Configuration
+
+### Backend Configuration
+Edit `spring-backend/src/main/resources/application.properties`:
+
+```properties
+# Server Configuration
+server.port=8081
+
+# Database Configuration (H2 in-memory)
+spring.datasource.url=jdbc:h2:mem:solarpanel
+spring.datasource.driverClassName=org.h2.Driver
+
+# ML API Configuration
+ml.api.url=http://localhost:5000
+
+# JWT Configuration
+jwt.secret=your-secret-key
+jwt.expiration=86400000
+```
+
+### Frontend Configuration
+Edit `react-frontend/src/services/api.js`:
+
+```javascript
+const api = axios.create({
+  baseURL: 'http://localhost:8081/api/v1',
+  timeout: 30000
+});
+```
+
+## 📊 API Endpoints
+
+### Authentication
+- `POST /api/v1/auth/login` - User login
+- `POST /api/v1/auth/register` - User registration
+- `GET /api/v1/auth/profile` - Get user profile
+
+### Dashboard
+- `GET /api/v1/dashboard/stats` - Get dashboard statistics
+
+### Plants
+- `GET /api/v1/plants` - Get all plants
+- `POST /api/v1/plants` - Create plant
+- `PUT /api/v1/plants/{id}` - Update plant
+- `DELETE /api/v1/plants/{id}` - Delete plant
+
+### Panels
+- `GET /api/v1/panels` - Get all panels
+- `POST /api/v1/panels` - Create panel
+- `GET /api/v1/panels/plant/{plantId}` - Get panels by plant
+- `PUT /api/v1/panels/{id}` - Update panel
+- `DELETE /api/v1/panels/{id}` - Delete panel
+
+### Alerts
+- `GET /api/v1/alerts` - Get all alerts
+- `GET /api/v1/alerts/status/{status}` - Get alerts by status
+- `POST /api/v1/alerts/{id}/acknowledge` - Acknowledge alert
+- `PUT /api/v1/alerts/{id}/status` - Update alert status
+- `PUT /api/v1/alerts/{id}/assign` - Assign technician
+- `PUT /api/v1/alerts/{id}/notes` - Add technician notes
+
+### Sensor Data
+- `POST /api/v1/sensor-data` - Submit sensor data
+
+### ML Predictions
+- `POST /predict` - Get fault prediction (ML API)
+
+## 🧪 Testing
+
+### Run Backend Tests
+```bash
+cd spring-backend
+mvn test
+```
+
+### Run ML API Tests
+```bash
 python api/test_api.py
 ```
 
-### API Usage Examples
-
-**Using curl:**
+### Test with Sensor Simulator
 ```bash
-# Health check
-curl http://localhost:5000/
-
-# Get API info
-curl http://localhost:5000/info
-
-# Make prediction
-curl -X POST http://localhost:5000/predict \
-  -H "Content-Type: application/json" \
-  -d '{
-    "voltage": 32.5,
-    "current": 8.2,
-    "temperature": 25.0,
-    "irradiance": 850.0,
-    "power": 266.5
-  }'
+python sensor_simulator.py
 ```
 
-**Using Python requests:**
-```python
-import requests
+## 🎯 Usage Guide
 
-# Make prediction
-response = requests.post('http://localhost:5000/predict', json={
-    'voltage': 32.5,
-    'current': 8.2,
-    'temperature': 25.0,
-    'irradiance': 850.0,
-    'power': 266.5
-})
+### 1. Create a Solar Plant
+1. Navigate to "Plants" in the sidebar
+2. Click "Add Plant"
+3. Fill in plant details (name, location, capacity)
+4. Click "Save"
 
-result = response.json()
-print(f"Predicted fault: {result['predicted_fault']}")
-```
+### 2. Add Solar Panels
+1. Navigate to "Manage Panels" in the sidebar
+2. Click "Add Panel"
+3. Select a plant from the dropdown
+4. Fill in panel details (panel ID, capacity, status)
+5. Click "Save"
 
-### Error Handling
+### 3. Simulate Sensor Data
+1. Run the sensor simulator: `python sensor_simulator.py`
+2. The simulator sends data every 10 seconds
+3. Watch alerts being generated automatically
+4. View real-time updates on the dashboard
 
-The API includes comprehensive error handling:
+### 4. Manage Alerts
+1. Navigate to "Alerts" in the sidebar
+2. View all generated alerts
+3. Filter by severity or status
+4. Acknowledge alerts
+5. Update alert status (Open → In Progress → Resolved)
+6. Add technician notes
 
-- **400 Bad Request**: Invalid input data or missing fields
-- **404 Not Found**: Endpoint doesn't exist
-- **405 Method Not Allowed**: Wrong HTTP method
-- **500 Internal Server Error**: Server-side errors
+## 🔍 Features in Detail
 
-Example error response:
-```json
-{
-    "error": "Invalid input data",
-    "message": "Missing required fields: voltage, current"
-}
-```
+### Machine Learning Model
+- **Algorithm:** Random Forest Classifier
+- **Features:** Voltage, Current, Temperature, Irradiance, Power
+- **Output:** Fault type, Severity, Confidence score
+- **Accuracy:** ~95% on test data
 
-## Requirements
+### Real-time Data Flow
+1. Sensor sends data → POST /sensor-data
+2. Backend receives data → Calls ML API
+3. ML API returns prediction → Backend saves result
+4. If fault detected → Alert generated automatically
+5. Frontend displays → Real-time updates
 
-- Python 3.7+
-- pandas 2.0.3
-- numpy 1.24.3
-- scikit-learn 1.3.0
-- joblib 1.3.2
-- matplotlib 3.7.2
-- seaborn 0.12.2
-- flask 2.3.3
-- flask-cors 4.0.0
+### Auto-refresh Features
+- Dashboard refreshes every 30 seconds
+- Alerts page refreshes every 30 seconds
+- Sensor simulator sends data every 10 seconds
 
-## License
+## 🛠️ Development
 
-This project is open source and available under the MIT License.
+### Adding New Features
+
+1. **Backend (Spring Boot)**
+   - Add entity in `entity/`
+   - Create repository in `repository/`
+   - Implement service in `service/`
+   - Add controller in `controller/`
+
+2. **Frontend (React)**
+   - Create component in `components/`
+   - Add page in `pages/`
+   - Update API service in `services/api.js`
+   - Add route in `App.js`
+
+3. **ML Model**
+   - Update training in `src/model.py`
+   - Modify prediction logic in `src/predictor.py`
+   - Retrain model: `python main.py`
+
+## 📝 Documentation
+
+- [System Startup Guide](SYSTEM_STARTUP_SUMMARY.md)
+- [Enhanced Alerts & Dashboard](ENHANCED_ALERTS_DASHBOARD_SUMMARY.md)
+- [Sensor Data Flow](SENSOR_DATA_FLOW_IMPLEMENTATION.md)
+- [Dynamic System Implementation](DYNAMIC_SYSTEM_IMPLEMENTATION.md)
+- [Sidebar Navigation Fix](SIDEBAR_NAVIGATION_FIX.md)
+
+## 🐛 Troubleshooting
+
+### Backend Won't Start
+- Check if port 8081 is available
+- Verify Java 17 is installed: `java -version`
+- Check Maven is installed: `mvn -version`
+
+### Frontend Won't Start
+- Check if port 3000 is available
+- Verify Node.js is installed: `node -version`
+- Run `npm install` in react-frontend directory
+
+### ML API Won't Start
+- Check if port 5000 is available
+- Verify Python is installed: `python --version`
+- Install requirements: `pip install -r requirements.txt`
+
+### Database Issues
+- System uses H2 in-memory database
+- Data is lost on restart
+- For persistent data, configure MySQL in application.properties
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 👥 Authors
+
+- Your Name - Initial work
+
+## 🙏 Acknowledgments
+
+- Random Forest algorithm for fault detection
+- Spring Boot for robust backend
+- React for modern UI
+- Flask for lightweight ML API
+
+## 📧 Contact
+
+For questions or support, please open an issue on GitHub.
+
+---
+
+**Built with ❤️ for sustainable energy monitoring**

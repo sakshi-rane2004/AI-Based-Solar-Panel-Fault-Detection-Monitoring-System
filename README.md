@@ -177,26 +177,6 @@ solar-panel-fault-detection/
 ├── plots/                       # Visualization outputs
 └── sensor_simulator.py          # IoT sensor simulator
 ```
-
-## 🔧 Configuration
-
-### Backend Configuration
-Edit `spring-backend/src/main/resources/application.properties`:
-
-```properties
-# Server Configuration
-server.port=8081
-
-# Database Configuration (H2 in-memory)
-spring.datasource.url=jdbc:h2:mem:solarpanel
-spring.datasource.driverClassName=org.h2.Driver
-
-# ML API Configuration
-ml.api.url=http://localhost:5000
-
-# JWT Configuration
-jwt.secret=your-secret-key
-jwt.expiration=86400000
 ```
 
 ### Frontend Configuration
@@ -308,32 +288,6 @@ python sensor_simulator.py
 4. If fault detected → Alert generated automatically
 5. Frontend displays → Real-time updates
 
-### Auto-refresh Features
-- Dashboard refreshes every 30 seconds
-- Alerts page refreshes every 30 seconds
-- Sensor simulator sends data every 10 seconds
-
-## 🛠️ Development
-
-### Adding New Features
-
-1. **Backend (Spring Boot)**
-   - Add entity in `entity/`
-   - Create repository in `repository/`
-   - Implement service in `service/`
-   - Add controller in `controller/`
-
-2. **Frontend (React)**
-   - Create component in `components/`
-   - Add page in `pages/`
-   - Update API service in `services/api.js`
-   - Add route in `App.js`
-
-3. **ML Model**
-   - Update training in `src/model.py`
-   - Modify prediction logic in `src/predictor.py`
-   - Retrain model: `python main.py`
-
 ## 📝 Documentation
 
 - [System Startup Guide](SYSTEM_STARTUP_SUMMARY.md)
@@ -342,46 +296,6 @@ python sensor_simulator.py
 - [Dynamic System Implementation](DYNAMIC_SYSTEM_IMPLEMENTATION.md)
 - [Sidebar Navigation Fix](SIDEBAR_NAVIGATION_FIX.md)
 
-## 🐛 Troubleshooting
-
-### Backend Won't Start
-- Check if port 8081 is available
-- Verify Java 17 is installed: `java -version`
-- Check Maven is installed: `mvn -version`
-
-### Frontend Won't Start
-- Check if port 3000 is available
-- Verify Node.js is installed: `node -version`
-- Run `npm install` in react-frontend directory
-
-### ML API Won't Start
-- Check if port 5000 is available
-- Verify Python is installed: `python --version`
-- Install requirements: `pip install -r requirements.txt`
-
-### Database Issues
-- System uses H2 in-memory database
-- Data is lost on restart
-- For persistent data, configure MySQL in application.properties
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## 👥 Authors
-
-- Your Name - Initial work
-
 ## 🙏 Acknowledgments
 
 - Random Forest algorithm for fault detection
@@ -389,10 +303,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - React for modern UI
 - Flask for lightweight ML API
 
-## 📧 Contact
 
-For questions or support, please open an issue on GitHub.
-
----
-
-**Built with ❤️ for sustainable energy monitoring**

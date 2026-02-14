@@ -137,12 +137,6 @@ python sensor_simulator.py
 - **Backend API:** http://localhost:8081/api/v1
 - **ML API:** http://localhost:5000
 
-### Default Login Credentials
-
-- **Admin:** `admin` / `Admin123!`
-- **Technician:** `technician` / `Tech123!`
-- **Viewer:** `viewer` / `Viewer123!`
-
 ## 📁 Project Structure
 
 ```

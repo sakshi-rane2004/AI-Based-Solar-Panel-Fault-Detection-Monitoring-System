@@ -153,7 +153,17 @@ class SolarDataPreprocessor:
                 raise ValueError(f"Missing feature: {feature}")
         
         # Select and order features
-        X_sample = df_sample[self.feature_columns]
+        X_sample = df_sample[self.feature_columns].copy()
+        
+        # Check if scaler expects engineered features (v2 model)
+        # v2 model has 10 features, v1 has 5
+        if hasattr(self.scaler, 'n_features_in_') and self.scaler.n_features_in_ == 10:
+            # Add engineered features for v2 model
+            X_sample['efficiency'] = X_sample['power'] / (X_sample['irradiance'] + 1e-6)
+            X_sample['voltage_current_ratio'] = X_sample['voltage'] / (X_sample['current'] + 1e-6)
+            X_sample['power_voltage_ratio'] = X_sample['power'] / (X_sample['voltage'] + 1e-6)
+            X_sample['temperature_effect'] = X_sample['temperature'] / (X_sample['irradiance'] + 1e-6)
+            X_sample['power_density'] = X_sample['power'] / (X_sample['voltage'] * X_sample['current'] + 1e-6)
         
         # Scale features
         X_sample_scaled = self.scaler.transform(X_sample)

@@ -23,7 +23,6 @@ public class SolarPanelController {
     private final SolarPanelService panelService;
     
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN')")
     public ResponseEntity<SolarPanelResponse> createPanel(@Valid @RequestBody SolarPanelRequest request) {
         log.info("REST request to create solar panel: {}", request.getPanelId());
         SolarPanelResponse response = panelService.createPanel(request);
@@ -52,7 +51,6 @@ public class SolarPanelController {
     }
     
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN')")
     public ResponseEntity<SolarPanelResponse> updatePanel(
             @PathVariable Long id,
             @Valid @RequestBody SolarPanelRequest request) {
@@ -62,7 +60,6 @@ public class SolarPanelController {
     }
     
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deletePanel(@PathVariable Long id) {
         log.info("REST request to delete solar panel: {}", id);
         panelService.deletePanel(id);

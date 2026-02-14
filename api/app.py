@@ -24,15 +24,25 @@ def initialize_predictor():
     global predictor
     
     try:
-        model_path = os.path.join('models', 'solar_fault_model.pkl')
-        preprocessor_path = os.path.join('models', 'preprocessors')
+        # Try to load v2 model first (improved model)
+        model_path = 'models/solar_fault_model_v2.pkl'
+        scaler_path = 'models/preprocessors_scaler_v2.pkl'
+        encoder_path = 'models/preprocessors_label_encoder_v2.pkl'
+        preprocessor_prefix = 'models/preprocessors_v2'
+        
+        # Fall back to v1 if v2 doesn't exist
+        if not os.path.exists(model_path):
+            print("V2 model not found, falling back to V1...")
+            model_path = 'models/solar_fault_model.pkl'
+            scaler_path = 'models/preprocessors_scaler.pkl'
+            encoder_path = 'models/preprocessors_label_encoder.pkl'
+            preprocessor_prefix = 'models/preprocessors'
+        else:
+            print("Loading improved V2 model...")
         
         # Check if model files exist
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Model file not found: {model_path}")
-        
-        scaler_path = f"{preprocessor_path}_scaler.pkl"
-        encoder_path = f"{preprocessor_path}_label_encoder.pkl"
         
         if not os.path.exists(scaler_path):
             raise FileNotFoundError(f"Scaler file not found: {scaler_path}")
@@ -40,7 +50,7 @@ def initialize_predictor():
         if not os.path.exists(encoder_path):
             raise FileNotFoundError(f"Label encoder file not found: {encoder_path}")
         
-        predictor = SolarFaultPredictor(model_path, preprocessor_path)
+        predictor = SolarFaultPredictor(model_path, preprocessor_prefix)
         print("✓ Model and preprocessors loaded successfully!")
         return True
         

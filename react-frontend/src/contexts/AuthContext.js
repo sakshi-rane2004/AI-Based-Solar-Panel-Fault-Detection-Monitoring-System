@@ -16,6 +16,38 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  // Demo role switcher - allows switching between roles without login
+  const switchRole = (role) => {
+    const roleUsers = {
+      'ADMIN': {
+        id: 1,
+        username: 'admin',
+        firstName: 'Admin',
+        lastName: 'User',
+        email: 'admin@solarpanel.com',
+        role: 'ADMIN'
+      },
+      'TECHNICIAN': {
+        id: 2,
+        username: 'technician',
+        firstName: 'Tech',
+        lastName: 'User',
+        email: 'tech@solarpanel.com',
+        role: 'TECHNICIAN'
+      },
+      'VIEWER': {
+        id: 3,
+        username: 'viewer',
+        firstName: 'View',
+        lastName: 'User',
+        email: 'viewer@solarpanel.com',
+        role: 'VIEWER'
+      }
+    };
+    
+    setUser(roleUsers[role]);
+  };
+
   useEffect(() => {
     // Check if user is already logged in
     const initializeAuth = async () => {
@@ -34,32 +66,10 @@ export const AuthProvider = ({ children }) => {
               logout();
             }
           }
-        } else {
-          // Auto-login as admin for demo purposes
-          const defaultUser = {
-            id: 1,
-            username: 'admin',
-            firstName: 'Admin',
-            lastName: 'User',
-            email: 'admin@solarpanel.com',
-            role: 'ADMIN'
-          };
-          setUser(defaultUser);
-          setIsLoggedIn(true);
         }
+        // Removed auto-login - users must select role on login page
       } catch (error) {
         console.error('Auth initialization error:', error);
-        // Set default user even on error
-        const defaultUser = {
-          id: 1,
-          username: 'admin',
-          firstName: 'Admin',
-          lastName: 'User',
-          email: 'admin@solarpanel.com',
-          role: 'ADMIN'
-        };
-        setUser(defaultUser);
-        setIsLoggedIn(true);
       } finally {
         setLoading(false);
       }
@@ -108,6 +118,9 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setUser(null);
       setIsLoggedIn(false);
+      // Clear any stored tokens or session data
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
     }
   };
 
@@ -198,6 +211,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     updateProfile,
     changePassword,
+    switchRole, // Add role switcher for demo
     userHasRole,
     userHasAnyRole,
     isAdmin,

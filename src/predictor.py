@@ -36,7 +36,19 @@ class SolarFaultPredictor:
         """
         try:
             self.model.load_model(model_path)
-            self.preprocessor.load_preprocessors(preprocessor_path)
+            
+            # Check if this is v2 model (with different file naming)
+            if '_v2' in preprocessor_path or '_v2' in model_path:
+                # V2 model uses different naming: preprocessors_scaler_v2.pkl
+                scaler_path = preprocessor_path.replace('_v2', '') + '_scaler_v2.pkl'
+                encoder_path = preprocessor_path.replace('_v2', '') + '_label_encoder_v2.pkl'
+                self.preprocessor.scaler = joblib.load(scaler_path)
+                self.preprocessor.label_encoder = joblib.load(encoder_path)
+                print(f"Loaded v2 preprocessors from {scaler_path} and {encoder_path}")
+            else:
+                # V1 model uses standard naming
+                self.preprocessor.load_preprocessors(preprocessor_path)
+            
             print("Trained components loaded successfully!")
         except Exception as e:
             print(f"Error loading trained components: {e}")

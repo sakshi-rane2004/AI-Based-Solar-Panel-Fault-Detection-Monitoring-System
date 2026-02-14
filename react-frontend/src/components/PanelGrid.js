@@ -1,137 +1,56 @@
 import React, { useState, useEffect } from 'react';
-import { solarPanelAPI } from '../services/api';
+import { panelAPI } from '../services/api';
 
-const PanelGrid = ({ onPanelClick }) => {
+const PanelGrid = ({ onPanelClick, panels: propPanels }) => {
   const [panels, setPanels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPanel, setSelectedPanel] = useState(null);
+  const [draggedPanel, setDraggedPanel] = useState(null);
 
-  // Generate mock panel data based on recent predictions
+  // Use panels from props if provided, otherwise fetch
   useEffect(() => {
-    const generatePanelData = async () => {
-      try {
-        setLoading(true);
-        const history = await solarPanelAPI.getHistory({ limit: 50 });
-        
-        // Generate 24 panels (4x6 grid) with mock data
-        const mockPanels = Array.from({ length: 24 }, (_, index) => {
-          const panelId = `P${String(index + 1).padStart(3, '0')}`;
-          
-          // Use some real data from history if available
-          const relatedPrediction = history[index % history.length];
-          
-          // Generate realistic sensor values
-          const baseVoltage = 30 + Math.random() * 10;
-          const baseCurrent = 8 + Math.random() * 4;
-          const baseTemp = 25 + Math.random() * 15;
-          const baseIrradiance = 800 + Math.random() * 400;
-          
-          // Determine health status based on fault type
-          let health = 'healthy';
-          let faultType = 'NORMAL';
-          let severity = 'LOW';
-          
-          if (relatedPrediction) {
-            faultType = relatedPrediction.predictedFault;
-            severity = relatedPrediction.severity;
-            
-            if (faultType !== 'NORMAL') {
-              if (severity === 'CRITICAL') {
-                health = 'critical';
-              } else if (severity === 'HIGH') {
-                health = 'warning';
-              } else {
-                health = 'warning';
-              }
-            }
-          } else {
-            // Random health for demo
-            const rand = Math.random();
-            if (rand < 0.1) {
-              health = 'critical';
-              faultType = 'INVERTER_FAULT';
-              severity = 'CRITICAL';
-            } else if (rand < 0.25) {
-              health = 'warning';
-              faultType = 'PARTIAL_SHADING';
-              severity = 'HIGH';
-            }
-          }
-          
-          // Adjust values based on health
-          let voltage = baseVoltage;
-          let current = baseCurrent;
-          let power = voltage * current;
-          
-          if (health === 'critical') {
-            voltage *= 0.6;
-            current *= 0.5;
-            power = voltage * current;
-          } else if (health === 'warning') {
-            voltage *= 0.8;
-            current *= 0.7;
-            power = voltage * current;
-          }
-          
-          return {
-            id: panelId,
-            health,
-            faultType,
-            severity,
-            voltage: Math.round(voltage * 10) / 10,
-            current: Math.round(current * 10) / 10,
-            power: Math.round(power * 10) / 10,
-            temperature: Math.round(baseTemp * 10) / 10,
-            irradiance: Math.round(baseIrradiance),
-            efficiency: Math.round((power / (baseIrradiance * 0.2)) * 100) / 100,
-            lastUpdate: new Date(Date.now() - Math.random() * 3600000).toISOString()
-          };
-        });
-        
-        setPanels(mockPanels);
-      } catch (error) {
-        console.error('Error generating panel data:', error);
-        // Fallback to basic mock data
-        const fallbackPanels = Array.from({ length: 24 }, (_, index) => ({
-          id: `P${String(index + 1).padStart(3, '0')}`,
-          health: Math.random() < 0.8 ? 'healthy' : Math.random() < 0.5 ? 'warning' : 'critical',
-          faultType: 'NORMAL',
-          severity: 'LOW',
-          voltage: 30 + Math.random() * 10,
-          current: 8 + Math.random() * 4,
-          power: 200 + Math.random() * 100,
-          temperature: 25 + Math.random() * 15,
-          irradiance: 800 + Math.random() * 400,
-          efficiency: 0.15 + Math.random() * 0.1,
-          lastUpdate: new Date().toISOString()
-        }));
-        setPanels(fallbackPanels);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (propPanels) {
+      setPanels(propPanels);
+      setLoading(false);
+    } else {
+      fetchPanels();
+    }
+  }, [propPanels]);
 
-    generatePanelData();
-    
-    // Refresh every 30 seconds
-    const interval = setInterval(generatePanelData, 30000);
-    return () => clearInterval(interval);
-  }, []);
+  // Fetch real panel data from database
+  const fetchPanels = async () => {
+    try {
+      setLoading(true);
+      const data = await panelAPI.getAllPanels();
+      // Sort panels by panelId alphabetically for consistent order
+      const sortedPanels = data.sort((a, b) => {
+        const idA = a.panelId || '';
+        const idB = b.panelId || '';
+        return idA.localeCompare(idB);
+      });
+      setPanels(sortedPanels);
+    } catch (error) {
+      console.error('Error fetching panels:', error);
+      setPanels([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const getHealthColor = (health) => {
-    switch (health) {
-      case 'healthy': return '#28a745';
-      case 'warning': return '#ffc107';
-      case 'critical': return '#dc3545';
+  const getHealthColor = (status) => {
+    switch (status) {
+      case 'ACTIVE': return '#28a745';
+      case 'MAINTENANCE': return '#ffc107';
+      case 'OFFLINE': return '#dc3545';
       default: return '#6c757d';
     }
   };
 
-  const getHealthIcon = (health) => {
-    switch (health) {
-      case 'healthy': return '✅';
-      case 'warning': return '⚠️';
-      case 'critical': return '🚨';
+  const getHealthIcon = (status) => {
+    switch (status) {
+      case 'ACTIVE': return '✅';
+      case 'MAINTENANCE': return '⚠️';
+      case 'OFFLINE': return '🚨';
       default: return '❓';
     }
   };
@@ -141,6 +60,45 @@ const PanelGrid = ({ onPanelClick }) => {
     if (onPanelClick) {
       onPanelClick(panel);
     }
+  };
+
+  // Drag and drop handlers
+  const handleDragStart = (e, panel) => {
+    setDraggedPanel(panel);
+    e.dataTransfer.effectAllowed = 'move';
+    e.currentTarget.style.opacity = '0.5';
+  };
+
+  const handleDragEnd = (e) => {
+    e.currentTarget.style.opacity = '1';
+    setDraggedPanel(null);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+  };
+
+  const handleDrop = (e, targetPanel) => {
+    e.preventDefault();
+    
+    if (!draggedPanel || draggedPanel.id === targetPanel.id) {
+      return;
+    }
+
+    const draggedIndex = panels.findIndex(p => p.id === draggedPanel.id);
+    const targetIndex = panels.findIndex(p => p.id === targetPanel.id);
+
+    if (draggedIndex === -1 || targetIndex === -1) {
+      return;
+    }
+
+    // Reorder panels
+    const newPanels = [...panels];
+    newPanels.splice(draggedIndex, 1);
+    newPanels.splice(targetIndex, 0, draggedPanel);
+    
+    setPanels(newPanels);
   };
 
   if (loading) {
@@ -159,46 +117,60 @@ const PanelGrid = ({ onPanelClick }) => {
         <div className="panel-grid-legend">
           <div className="legend-item">
             <div className="legend-color" style={{ backgroundColor: '#28a745' }}></div>
-            <span>Healthy</span>
+            <span>Active</span>
           </div>
           <div className="legend-item">
             <div className="legend-color" style={{ backgroundColor: '#ffc107' }}></div>
-            <span>Warning</span>
+            <span>Maintenance</span>
           </div>
           <div className="legend-item">
             <div className="legend-color" style={{ backgroundColor: '#dc3545' }}></div>
-            <span>Critical</span>
+            <span>Offline</span>
           </div>
         </div>
       </div>
 
       <div className="panel-grid">
-        {panels.map((panel) => (
-          <div
-            key={panel.id}
-            className={`panel-tile ${panel.health} ${selectedPanel?.id === panel.id ? 'selected' : ''}`}
-            onClick={() => handlePanelClick(panel)}
-            style={{ borderColor: getHealthColor(panel.health) }}
-          >
-            <div className="panel-tile-header">
-              <span className="panel-tile-id">{panel.id}</span>
-              <span className="panel-tile-status">{getHealthIcon(panel.health)}</span>
-            </div>
-            <div className="panel-tile-power">
-              {Math.round(panel.power)}W
-            </div>
-            <div className="panel-tile-efficiency">
-              {Math.round(panel.efficiency * 100)}%
-            </div>
+        {panels.length === 0 ? (
+          <div className="panel-grid-empty">
+            <p>No panels found. Add panels using the "+ Add Panel" button above.</p>
           </div>
-        ))}
+        ) : (
+          panels.map((panel) => (
+            <div
+              key={panel.id}
+              className={`panel-tile ${panel.status ? panel.status.toLowerCase() : 'unknown'} ${selectedPanel?.id === panel.id ? 'selected' : ''} ${draggedPanel?.id === panel.id ? 'dragging' : ''}`}
+              onClick={() => handlePanelClick(panel)}
+              draggable="true"
+              onDragStart={(e) => handleDragStart(e, panel)}
+              onDragEnd={handleDragEnd}
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, panel)}
+              style={{ 
+                borderColor: getHealthColor(panel.status || 'OFFLINE'),
+                cursor: 'move'
+              }}
+            >
+              <div className="panel-tile-header">
+                <span className="panel-tile-id">{panel.panelId || 'N/A'}</span>
+                <span className="panel-tile-status">{getHealthIcon(panel.status || 'OFFLINE')}</span>
+              </div>
+              <div className="panel-tile-power">
+                {Math.round(panel.capacity || 0)}W
+              </div>
+              <div className="panel-tile-plant">
+                {panel.plantName || 'Unknown'}
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {selectedPanel && (
         <div className="panel-details-modal" onClick={() => setSelectedPanel(null)}>
           <div className="panel-details-content" onClick={(e) => e.stopPropagation()}>
             <div className="panel-details-header">
-              <h4>Panel {selectedPanel.id} Details</h4>
+              <h4>Panel {selectedPanel.panelId || 'N/A'} Details</h4>
               <button 
                 className="panel-details-close"
                 onClick={() => setSelectedPanel(null)}
@@ -210,49 +182,36 @@ const PanelGrid = ({ onPanelClick }) => {
             <div className="panel-details-grid">
               <div className="panel-detail-item">
                 <label>Status</label>
-                <div className={`panel-status ${selectedPanel.health}`}>
-                  {getHealthIcon(selectedPanel.health)} {selectedPanel.health.toUpperCase()}
+                <div className={`panel-status ${selectedPanel.status ? selectedPanel.status.toLowerCase() : 'unknown'}`}>
+                  {getHealthIcon(selectedPanel.status || 'OFFLINE')} {selectedPanel.status || 'UNKNOWN'}
                 </div>
               </div>
               
               <div className="panel-detail-item">
-                <label>Fault Type</label>
-                <div>{selectedPanel.faultType}</div>
+                <label>Plant</label>
+                <div>{selectedPanel.plantName || 'Unknown'}</div>
               </div>
               
               <div className="panel-detail-item">
-                <label>Voltage</label>
-                <div>{selectedPanel.voltage}V</div>
+                <label>Capacity</label>
+                <div>{selectedPanel.capacity || 0}W</div>
               </div>
               
               <div className="panel-detail-item">
-                <label>Current</label>
-                <div>{selectedPanel.current}A</div>
+                <label>Installation Date</label>
+                <div>{selectedPanel.installationDate ? new Date(selectedPanel.installationDate).toLocaleDateString() : 'N/A'}</div>
               </div>
               
-              <div className="panel-detail-item">
-                <label>Power Output</label>
-                <div>{selectedPanel.power}W</div>
-              </div>
-              
-              <div className="panel-detail-item">
-                <label>Temperature</label>
-                <div>{selectedPanel.temperature}°C</div>
-              </div>
-              
-              <div className="panel-detail-item">
-                <label>Irradiance</label>
-                <div>{selectedPanel.irradiance}W/m²</div>
-              </div>
-              
-              <div className="panel-detail-item">
-                <label>Efficiency</label>
-                <div>{Math.round(selectedPanel.efficiency * 100)}%</div>
-              </div>
+              {selectedPanel.assignedTechnicianId && (
+                <div className="panel-detail-item">
+                  <label>Assigned Technician</label>
+                  <div>ID: {selectedPanel.assignedTechnicianId}</div>
+                </div>
+              )}
             </div>
             
             <div className="panel-details-footer">
-              <small>Last updated: {new Date(selectedPanel.lastUpdate).toLocaleString()}</small>
+              <small>Created: {selectedPanel.createdAt ? new Date(selectedPanel.createdAt).toLocaleString() : 'N/A'}</small>
             </div>
           </div>
         </div>

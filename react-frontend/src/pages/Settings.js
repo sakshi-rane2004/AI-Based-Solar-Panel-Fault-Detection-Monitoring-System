@@ -1,8 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useTheme } from '../contexts/ThemeContext';
 
 const Settings = () => {
   const { isDark, toggleTheme } = useTheme();
+  const [activeSection, setActiveSection] = useState('notifications');
+  
+  // Refs for each section
+  const notificationsRef = useRef(null);
+  const dashboardRef = useRef(null);
+  const alertsRef = useRef(null);
+  const systemRef = useRef(null);
+  const appearanceRef = useRef(null);
+  
   const [settings, setSettings] = useState({
     notifications: {
       email: true,
@@ -46,6 +55,14 @@ const Settings = () => {
     alert('Settings saved successfully!');
   };
 
+  const scrollToSection = (sectionRef, sectionName) => {
+    setActiveSection(sectionName);
+    sectionRef.current?.scrollIntoView({ 
+      behavior: 'smooth', 
+      block: 'start' 
+    });
+  };
+
   return (
     <div className="settings-page">
       <div className="page-header">
@@ -68,23 +85,38 @@ const Settings = () => {
 
       <div className="settings-content">
         <div className="settings-nav">
-          <div className="settings-nav-item active">
+          <div 
+            className={`settings-nav-item ${activeSection === 'notifications' ? 'active' : ''}`}
+            onClick={() => scrollToSection(notificationsRef, 'notifications')}
+          >
             <span className="nav-icon">🔔</span>
             <span>Notifications</span>
           </div>
-          <div className="settings-nav-item">
+          <div 
+            className={`settings-nav-item ${activeSection === 'dashboard' ? 'active' : ''}`}
+            onClick={() => scrollToSection(dashboardRef, 'dashboard')}
+          >
             <span className="nav-icon">📊</span>
             <span>Dashboard</span>
           </div>
-          <div className="settings-nav-item">
+          <div 
+            className={`settings-nav-item ${activeSection === 'alerts' ? 'active' : ''}`}
+            onClick={() => scrollToSection(alertsRef, 'alerts')}
+          >
             <span className="nav-icon">🚨</span>
             <span>Alerts</span>
           </div>
-          <div className="settings-nav-item">
+          <div 
+            className={`settings-nav-item ${activeSection === 'system' ? 'active' : ''}`}
+            onClick={() => scrollToSection(systemRef, 'system')}
+          >
             <span className="nav-icon">⚙️</span>
             <span>System</span>
           </div>
-          <div className="settings-nav-item">
+          <div 
+            className={`settings-nav-item ${activeSection === 'appearance' ? 'active' : ''}`}
+            onClick={() => scrollToSection(appearanceRef, 'appearance')}
+          >
             <span className="nav-icon">🎨</span>
             <span>Appearance</span>
           </div>
@@ -92,7 +124,7 @@ const Settings = () => {
 
         <div className="settings-main">
           {/* Appearance Settings */}
-          <div className="settings-section">
+          <div className="settings-section" ref={appearanceRef}>
             <h3>Appearance</h3>
             <div className="setting-item">
               <div className="setting-info">
@@ -113,7 +145,7 @@ const Settings = () => {
           </div>
 
           {/* Notification Settings */}
-          <div className="settings-section">
+          <div className="settings-section" ref={notificationsRef}>
             <h3>Notifications</h3>
             
             <div className="setting-item">
@@ -160,7 +192,7 @@ const Settings = () => {
           </div>
 
           {/* Dashboard Settings */}
-          <div className="settings-section">
+          <div className="settings-section" ref={dashboardRef}>
             <h3>Dashboard</h3>
             
             <div className="setting-item">
@@ -211,7 +243,7 @@ const Settings = () => {
           </div>
 
           {/* Alert Settings */}
-          <div className="settings-section">
+          <div className="settings-section" ref={alertsRef}>
             <h3>Alert Management</h3>
             
             <div className="setting-item">
@@ -264,7 +296,7 @@ const Settings = () => {
           </div>
 
           {/* System Settings */}
-          <div className="settings-section">
+          <div className="settings-section" ref={systemRef}>
             <h3>System Configuration</h3>
             
             <div className="setting-item">

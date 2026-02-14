@@ -23,7 +23,6 @@ public class SolarPlantController {
     private final SolarPlantService plantService;
     
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN')")
     public ResponseEntity<SolarPlantResponse> createPlant(@Valid @RequestBody SolarPlantRequest request) {
         log.info("REST request to create solar plant: {}", request.getName());
         SolarPlantResponse response = plantService.createPlant(request);
@@ -45,7 +44,6 @@ public class SolarPlantController {
     }
     
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TECHNICIAN')")
     public ResponseEntity<SolarPlantResponse> updatePlant(
             @PathVariable Long id,
             @Valid @RequestBody SolarPlantRequest request) {
@@ -55,7 +53,6 @@ public class SolarPlantController {
     }
     
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deletePlant(@PathVariable Long id) {
         log.info("REST request to delete solar plant: {}", id);
         plantService.deletePlant(id);

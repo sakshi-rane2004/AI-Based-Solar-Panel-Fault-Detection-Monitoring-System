@@ -1,6 +1,8 @@
 package com.solarpanel.faultdetection.config;
 
+import com.solarpanel.faultdetection.entity.SolarPlant;
 import com.solarpanel.faultdetection.entity.User;
+import com.solarpanel.faultdetection.repository.SolarPlantRepository;
 import com.solarpanel.faultdetection.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,11 +20,15 @@ public class DataInitializer implements CommandLineRunner {
     private UserRepository userRepository;
     
     @Autowired
+    private SolarPlantRepository solarPlantRepository;
+    
+    @Autowired
     private PasswordEncoder passwordEncoder;
     
     @Override
     public void run(String... args) throws Exception {
         initializeDefaultUsers();
+        initializeDefaultPlants();
     }
     
     private void initializeDefaultUsers() {
@@ -153,6 +159,41 @@ public class DataInitializer implements CommandLineRunner {
                        totalUsers, adminCount, technicianCount, viewerCount);
         } catch (Exception e) {
             logger.warn("Could not get user statistics: {}", e.getMessage());
+        }
+    }
+    
+    private void initializeDefaultPlants() {
+        logger.info("Initializing default solar plants...");
+        
+        try {
+            if (solarPlantRepository.count() == 0) {
+                SolarPlant plant1 = new SolarPlant();
+                plant1.setName("North Valley Solar Farm");
+                plant1.setLocation("California, USA");
+                plant1.setCapacityKW(500.0);
+                solarPlantRepository.save(plant1);
+                logger.info("Created solar plant: North Valley Solar Farm");
+                
+                SolarPlant plant2 = new SolarPlant();
+                plant2.setName("Desert Sun Power Station");
+                plant2.setLocation("Arizona, USA");
+                plant2.setCapacityKW(750.0);
+                solarPlantRepository.save(plant2);
+                logger.info("Created solar plant: Desert Sun Power Station");
+                
+                SolarPlant plant3 = new SolarPlant();
+                plant3.setName("Coastal Energy Park");
+                plant3.setLocation("Florida, USA");
+                plant3.setCapacityKW(300.0);
+                solarPlantRepository.save(plant3);
+                logger.info("Created solar plant: Coastal Energy Park");
+                
+                logger.info("Default solar plants initialization completed");
+            } else {
+                logger.info("Solar plants already exist, skipping initialization");
+            }
+        } catch (Exception e) {
+            logger.warn("Could not initialize solar plants: {}", e.getMessage());
         }
     }
 }

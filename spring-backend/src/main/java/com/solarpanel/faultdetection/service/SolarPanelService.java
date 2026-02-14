@@ -51,6 +51,7 @@ public class SolarPanelService {
     public List<SolarPanelResponse> getAllPanels() {
         log.info("Fetching all solar panels");
         return panelRepository.findAll().stream()
+                .sorted((a, b) -> a.getId().compareTo(b.getId())) // Sort by ID (creation order)
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }

@@ -1,112 +1,174 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    username: '',
-    password: ''
-  });
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const { login } = useAuth();
   const navigate = useNavigate();
+  const { switchRole } = useAuth();
+  const [selectedRole, setSelectedRole] = useState('ADMIN');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    // Clear error when user starts typing
-    if (error) setError('');
+  const roles = [
+    {
+      id: 'ADMIN',
+      icon: '👑',
+      title: 'Administrator',
+      description: 'Full system access and management',
+      color: '#dc3545',
+      features: ['Manage all panels', 'View analytics', 'User management', 'System settings']
+    },
+    {
+      id: 'TECHNICIAN',
+      icon: '🔧',
+      title: 'Technician',
+      description: 'Panel maintenance and alerts',
+      color: '#ffc107',
+      features: ['Manage panels', 'Handle alerts', 'Run diagnostics', 'View reports']
+    },
+    {
+      id: 'VIEWER',
+      icon: '👁️',
+      title: 'Viewer',
+      description: 'Read-only dashboard access',
+      color: '#28a745',
+      features: ['View dashboard', 'Monitor status', 'Check alerts', 'Read reports']
+    }
+  ];
+
+  const handleLogin = () => {
+    setIsLoading(true);
+    
+    // Simulate login delay for better UX
+    setTimeout(() => {
+      switchRole(selectedRole);
+      setIsLoading(false);
+      navigate('/');
+    }, 800);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleQuickLogin = (role) => {
+    setSelectedRole(role);
+    setIsLoading(true);
     
-    if (!formData.username || !formData.password) {
-      setError('Please fill in all fields');
-      return;
-    }
-
-    try {
-      setLoading(true);
-      setError('');
-      
-      console.log('Attempting login with:', { username: formData.username });
-      const response = await login(formData);
-      console.log('Login successful:', response);
+    setTimeout(() => {
+      switchRole(role);
+      setIsLoading(false);
       navigate('/');
-    } catch (err) {
-      console.error('Login error details:', err);
-      setError(err.message || 'Login failed. Please check your credentials.');
-    } finally {
-      setLoading(false);
-    }
+    }, 600);
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-header">
-          <h1>Solar Panel Dashboard</h1>
-          <h2>Sign In</h2>
-          <p>Enter your credentials to access the dashboard</p>
+    <div className="login-page">
+      <div className="login-background">
+        <div className="solar-animation">
+          <div className="sun"></div>
+          <div className="panel panel-1"></div>
+          <div className="panel panel-2"></div>
+          <div className="panel panel-3"></div>
         </div>
+      </div>
 
-        {error && (
-          <div className="error-alert">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit} className="auth-form">
-          <div className="form-group">
-            <label htmlFor="username">Username</label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={formData.username}
-              onChange={handleInputChange}
-              placeholder="Enter your username"
-              required
-              disabled={loading}
-              autoComplete="username"
-            />
+      <div className="login-container">
+        <div className="login-card">
+          <div className="login-header">
+            <div className="login-logo">
+              <span className="logo-icon">☀️</span>
+              <h1>Solar Panel Monitor</h1>
+            </div>
+            <p className="login-subtitle">Intelligent Fault Detection System</p>
+            <div className="demo-badge">
+              <span>🎭</span> Demo Mode
+            </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleInputChange}
-              placeholder="Enter your password"
-              required
-              disabled={loading}
-              autoComplete="current-password"
-            />
+          <div className="login-content">
+            <h2 className="section-title">Select Your Role</h2>
+            
+            <div className="role-cards">
+              {roles.map((role) => (
+                <div
+                  key={role.id}
+                  className={`role-card ${selectedRole === role.id ? 'selected' : ''}`}
+                  onClick={() => setSelectedRole(role.id)}
+                  style={{
+                    '--role-color': role.color
+                  }}
+                >
+                  <div className="role-card-header">
+                    <span className="role-card-icon">{role.icon}</span>
+                    <div className="role-card-info">
+                      <h3>{role.title}</h3>
+                      <p>{role.description}</p>
+                    </div>
+                    <div className="role-card-check">
+                      {selectedRole === role.id && <span>✓</span>}
+                    </div>
+                  </div>
+                  
+                  <div className="role-card-features">
+                    {role.features.map((feature, index) => (
+                      <div key={index} className="feature-item">
+                        <span className="feature-dot">•</span>
+                        <span>{feature}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button
+                    className="quick-login-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleQuickLogin(role.id);
+                    }}
+                    disabled={isLoading}
+                  >
+                    Quick Login as {role.title}
+                  </button>
+                </div>
+              ))}
+            </div>
+
+            <div className="login-actions">
+              <button
+                className="login-btn"
+                onClick={handleLogin}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <span className="spinner"></span>
+                    Logging in...
+                  </>
+                ) : (
+                  <>
+                    Continue as {roles.find(r => r.id === selectedRole)?.title}
+                    <span className="arrow">→</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            <div className="login-info">
+              <div className="info-card">
+                <span className="info-icon">ℹ️</span>
+                <div className="info-text">
+                  <strong>Demo Mode Active</strong>
+                  <p>No password required. Select a role to explore the system.</p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <button 
-            type="submit" 
-            className="btn-primary"
-            disabled={loading}
-          >
-            {loading ? 'Signing In...' : 'Sign In'}
-          </button>
-        </form>
-
-        <div className="auth-footer">
-          <p>
-            Don't have an account?{' '}
-            <Link to="/register">Create Account</Link>
-          </p>
+          <div className="login-footer">
+            <p>Powered by AI & Machine Learning</p>
+            <div className="footer-links">
+              <a href="#about">About</a>
+              <span>•</span>
+              <a href="#docs">Documentation</a>
+              <span>•</span>
+              <a href="#support">Support</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

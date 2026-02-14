@@ -108,6 +108,17 @@ const Sidebar = ({ isCollapsed, onToggle }) => {
               </div>
             </div>
           </div>
+          <button 
+            className="sidebar-logout-btn"
+            onClick={() => {
+              if (window.confirm('Are you sure you want to logout?')) {
+                window.location.href = '/login';
+              }
+            }}
+            title="Logout"
+          >
+            🚪
+          </button>
         </div>
       )}
     </div>

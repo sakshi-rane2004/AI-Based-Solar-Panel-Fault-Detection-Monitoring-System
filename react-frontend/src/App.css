@@ -1,24 +1,29 @@
 /* Root Variables for Theme Support */
 :root {
-  --primary-color: #667eea;
-  --secondary-color: #764ba2;
-  --success-color: #28a745;
-  --warning-color: #ffc107;
-  --danger-color: #dc3545;
-  --info-color: #17a2b8;
-  --light-color: #f8f9fa;
-  --dark-color: #343a40;
+  /* Sophisticated Teal/Emerald Theme - Classy & Modern */
+  --primary-color: #0d9488;      /* Teal-600 - Main brand color */
+  --primary-dark: #0f766e;       /* Teal-700 - Darker shade */
+  --primary-light: #14b8a6;      /* Teal-500 - Lighter shade */
+  --secondary-color: #059669;    /* Emerald-600 - Accent color */
+  --accent-color: #10b981;       /* Emerald-500 - Highlights */
+  
+  --success-color: #059669;      /* Emerald-600 */
+  --warning-color: #f59e0b;      /* Amber-500 */
+  --danger-color: #dc2626;       /* Red-600 */
+  --info-color: #0891b2;         /* Cyan-600 */
+  --light-color: #f8fafc;        /* Slate-50 */
+  --dark-color: #1e293b;         /* Slate-800 */
   
   --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --bg-tertiary: #e9ecef;
-  --text-primary: #333333;
-  --text-secondary: #666666;
-  --text-muted: #999999;
-  --border-color: #dee2e6;
-  --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
-  --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-heavy: 0 10px 25px rgba(0, 0, 0, 0.2);
+  --bg-secondary: #f8fafc;       /* Slate-50 */
+  --bg-tertiary: #f1f5f9;        /* Slate-100 */
+  --text-primary: #0f172a;       /* Slate-900 */
+  --text-secondary: #475569;     /* Slate-600 */
+  --text-muted: #94a3b8;         /* Slate-400 */
+  --border-color: #e2e8f0;       /* Slate-200 */
+  --shadow-light: 0 2px 4px rgba(13, 148, 136, 0.08);
+  --shadow-medium: 0 4px 6px rgba(13, 148, 136, 0.12);
+  --shadow-heavy: 0 10px 25px rgba(13, 148, 136, 0.15);
   
   --sidebar-width: 250px;
   --sidebar-collapsed-width: 60px;
@@ -31,15 +36,21 @@
 
 /* Dark Theme Variables */
 [data-theme="dark"] {
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #2d2d2d;
-  --bg-tertiary: #404040;
-  --text-primary: #ffffff;
-  --text-secondary: #cccccc;
-  --text-muted: #999999;
-  --border-color: #404040;
+  --primary-color: #14b8a6;      /* Teal-500 - Brighter for dark mode */
+  --primary-dark: #0d9488;       /* Teal-600 */
+  --primary-light: #2dd4bf;      /* Teal-400 */
+  --secondary-color: #10b981;    /* Emerald-500 */
+  --accent-color: #34d399;       /* Emerald-400 */
+  
+  --bg-primary: #0f172a;         /* Slate-900 */
+  --bg-secondary: #1e293b;       /* Slate-800 */
+  --bg-tertiary: #334155;        /* Slate-700 */
+  --text-primary: #f8fafc;       /* Slate-50 */
+  --text-secondary: #cbd5e1;     /* Slate-300 */
+  --text-muted: #64748b;         /* Slate-500 */
+  --border-color: #334155;       /* Slate-700 */
   --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.3);
-  --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.4);
   --shadow-heavy: 0 10px 25px rgba(0, 0, 0, 0.5);
 }
 
@@ -71,7 +82,7 @@ body {
 .header {
   background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
   color: white;
-  padding: 1rem 0;
+  padding: 1.2rem 0;
   box-shadow: var(--shadow-medium);
   position: sticky;
   top: 0;
@@ -401,13 +412,13 @@ body {
 
 @keyframes activeGlow {
   0% { 
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
   }
   50% { 
-    box-shadow: 0 4px 20px rgba(0, 123, 255, 0.5);
+    box-shadow: 0 4px 20px rgba(13, 148, 136, 0.5);
   }
   100% { 
-    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
   }
 }
 
@@ -3575,10 +3586,10 @@ body {
 }
 
 .sidebar-item.active {
-  background: linear-gradient(135deg, var(--primary-color), #0056b3);
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
   color: white;
   font-weight: 600;
-  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
   transform: translateX(4px);
   animation: activeGlow 3s ease-in-out infinite;
 }
@@ -3622,8 +3633,8 @@ body {
 
 /* Dark mode sidebar active state */
 [data-theme="dark"] .sidebar-item.active {
-  background: linear-gradient(135deg, #0d6efd, #0056b3);
-  box-shadow: 0 4px 16px rgba(13, 110, 253, 0.4);
+  background: linear-gradient(135deg, #14b8a6, #0d9488);
+  box-shadow: 0 4px 16px rgba(20, 184, 166, 0.4);
 }
 
 [data-theme="dark"] .sidebar-item.active::before {
@@ -3633,13 +3644,13 @@ body {
 
 @keyframes activeGlowDark {
   0% { 
-    box-shadow: 0 4px 16px rgba(13, 110, 253, 0.4);
+    box-shadow: 0 4px 16px rgba(20, 184, 166, 0.4);
   }
   50% { 
-    box-shadow: 0 4px 24px rgba(13, 110, 253, 0.6);
+    box-shadow: 0 4px 24px rgba(20, 184, 166, 0.6);
   }
   100% { 
-    box-shadow: 0 4px 16px rgba(13, 110, 253, 0.4);
+    box-shadow: 0 4px 16px rgba(20, 184, 166, 0.4);
   }
 }
 
@@ -3968,7 +3979,7 @@ body {
   justify-content: center;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0d9488 0%, #059669 50%, #10b981 100%);
 }
 
 .login-background {
@@ -4061,7 +4072,7 @@ body {
 .login-header {
   text-align: center;
   padding: 40px 40px 30px;
-  background: linear-gradient(135deg, var(--primary-color), #0056b3);
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
   color: white;
   position: relative;
 }
@@ -4274,7 +4285,7 @@ body {
 
 .login-btn {
   padding: 16px 48px;
-  background: linear-gradient(135deg, var(--primary-color), #0056b3);
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
   color: white;
   border: none;
   border-radius: 12px;
@@ -4285,12 +4296,12 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  box-shadow: 0 4px 16px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 4px 16px rgba(13, 148, 136, 0.3);
 }
 
 .login-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(13, 148, 136, 0.4);
 }
 
 .login-btn:disabled {
@@ -4325,8 +4336,8 @@ body {
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  background: rgba(13, 110, 253, 0.1);
-  border: 1px solid rgba(13, 110, 253, 0.2);
+  background: rgba(13, 148, 136, 0.1);
+  border: 1px solid rgba(13, 148, 136, 0.2);
   border-radius: 12px;
   padding: 16px 20px;
   max-width: 500px;
@@ -4420,10 +4431,10 @@ body {
 
 /* Dark Mode Adjustments */
 [data-theme="dark"] .login-page {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
 }
 
 [data-theme="dark"] .info-card {
-  background: rgba(13, 110, 253, 0.15);
-  border-color: rgba(13, 110, 253, 0.3);
+  background: rgba(20, 184, 166, 0.15);
+  border-color: rgba(20, 184, 166, 0.3);
 }

@@ -129,7 +129,7 @@ const Header = () => {
               onClick={handleLogout}
               title="Logout"
             >
-              <span className="logout-icon">🚪</span>
+              <span className="logout-icon"></span>
               <span className="logout-text">Logout</span>
             </button>
           </div>

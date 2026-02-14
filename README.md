@@ -2,9 +2,6 @@
 
 An AI-powered, full-stack application for real-time solar panel fault detection and monitoring using Machine Learning, Spring Boot, and React.
 
-![System Status](https://img.shields.io/badge/status-active-success.svg)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-
 ## 🌟 Features
 
 ### 🤖 Machine Learning
